@@ -68,9 +68,14 @@ namespace gw.gql
 
             var field = type.GetField( name );
 
+            if (field == null)
+            {
+                field = type.GetField( name, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic );
+            }
+
             if( field != null )
             {
-                if( field.IsPrivate )
+                if( field.IsPrivate && !Attribute.IsDefined( field, typeof( UnityEngine.SerializeField ) ) )
                 {
                     return null;
                 }
@@ -84,7 +89,7 @@ namespace gw.gql
 
             if( prop != null )
             {
-                if( prop.CanRead == false )
+                if( prop.CanRead == false ) // FIXME Serialized?
                 {
                     return null;
                 }
