@@ -59,7 +59,7 @@ namespace gw.proto.utils
                 {
                     json.Name( field.Name );
 
-                    if( depth <= 1 )
+                    if( depth <= 2 )
                     {
                         Recurse( value, json, depth );
                     }
@@ -94,11 +94,11 @@ namespace gw.proto.utils
                         json.Name( prop.Name );
                         json.Value( JsonTypeConverters.SerialiseValueType( value ) );
                     }
-                    else if( depth <= 1 )
+                    else if( depth <= 2 )
                     {
                         json.Name( prop.Name );
 
-                        if( depth <= 1 )
+                        if( depth <= 2 ) // FIXME
                         {
                             Recurse( value, json, depth );
                         }
