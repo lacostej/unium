@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace gw.proto.utils
 {
@@ -39,7 +40,12 @@ namespace gw.proto.utils
 
             json.BeginObject();
 
-            foreach( var field in type.GetFields( BindingFlags.Instance | BindingFlags.Public ) )
+            System.Reflection.FieldInfo[] publicFields = type.GetFields( BindingFlags.Instance | BindingFlags.Public );
+            IEnumerable<System.Reflection.FieldInfo> serializedPrivateFields = type.GetFields( BindingFlags.Instance | BindingFlags.NonPublic ).Where(
+                f => Attribute.IsDefined( f, typeof( UnityEngine.SerializeField ) ) );
+            var fields = publicFields.Union (serializedPrivateFields);
+
+            foreach( var field in fields )
             {
                 var value = field.GetValue( obj );
                 var valueType = field.FieldType;
